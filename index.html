@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's Day Hari Kutty  ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #a18cd1);
+    height: 100vh;
+}
+
+/* Floating Hearts */
+.heart {
+    position: absolute;
+    color: rgba(255,255,255,0.6);
+    animation: float 8s linear infinite;
+    pointer-events: none;
+}
+
+
+@keyframes float {
+    from { transform: translateY(100vh); }
+    to { transform: translateY(-10vh); }
+}
+
+/* Center Card */
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    width: 85%;
+    max-width: 420px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+/* Buttons */
+button {
+    margin: 10px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    background: white;
+    color: #ff4e78;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background: #ffe6ee;
+}
+
+/* Runaway button style - Me button */
+.runaway-btn {
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.runaway-btn:hover {
+    box-shadow: 0 8px 25px rgba(255,78,120,0.3);
+}
+
+@keyframes runaway {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(150px, -80px); }
+    40% { transform: translate(-150px, 80px); }
+    60% { transform: translate(200px, 50px); }
+    80% { transform: translate(-100px, -120px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Even more aggressive run for second attempt */
+.runaway-btn:active {
+    animation: runaway-fast 0.3s ease-in-out;
+}
+
+@keyframes runaway-fast {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(50px, -40px); }
+    50% { transform: translate(-50px, 30px); }
+    75% { transform: translate(60px, -20px); }
+    100% { transform: translate(0, 0); }
+}
+
+.teasing-tagline {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    margin-top: 5px;
+    font-style: italic;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Hidden sections */
+.hidden {
+    display: none;
+}
+
+.popup-content {
+    background: white;
+    color: #ff4e78;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 300px;
+    text-align: center;
+    z-index: 10000;
+}
+
+
+/* Love Meter */
+.meter {
+    width: 100%;
+    background: rgba(255,255,255,0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.meter-fill {
+    height: 20px;
+    width: 0%;
+    background: #fff;
+    transition: width 2s ease;
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    font-size: 20px;
+    animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+    from { transform: translateY(-10vh); }
+    to { transform: translateY(110vh); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating hearts container -->
+<div id="hearts"></div>
+
+<!-- Landing -->
+<div class="card" id="landing">
+    <h1>Happy Valentine's Day <br> Hari Kutty ❤️</h1>
+    <p>I made a small fun game for you…<br>Answer honestly 😏</p>
+    <button onclick="startGame()">Start The Game</button>
+</div>
+
+<!-- Quiz -->
+<div class="card hidden" id="quiz">
+    <h2 id="question"></h2>
+    <div id="answers"></div>
+</div>
+
+<!-- Result -->
+<div class="card hidden" id="result">
+    <h2>Compatibility Score</h2>
+    <div class="meter">
+        <div class="meter-fill" id="meterFill"></div>
+    </div>
+    <h3 id="scoreText"></h3>
+    <button onclick="showFinal()">Reveal Final Message</button>
+</div>
+
+<!-- Final -->
+<div class="card hidden" id="final">
+    <h2>Hari Kutty ❤️</h2>
+    <p>
+        Jokes apart…<br><br>
+        Life became more meaningful, peaceful, and beautiful because of you.<br><br>
+        You are my partner,<br>
+        my comfort place,<br>
+        and my biggest happiness.<br><br>
+        Happy Valentine’s Day ❤️<br>
+        – Your's Aru
+    </p>
+</div>
+
+<!-- Popup -->
+<div class="popup hidden" id="popup">
+    <div class="popup-content">
+        <p id="popupText"></p>
+        <button onclick="closePopup()">Continue</button>
+    </div>
+</div>
+
+<script>
+const wifeName = "Hari Kutty";
+
+/* ======================
+   👉 EDIT QUESTIONS HERE
+   ====================== */
+const questions = [
+{
+question: `${wifeName}, who said "I love you" first?`,
+answers: [
+{text: "You", reply: "Yes… and from that day my life became 'Marakumma Nejnam....song continues 😂"},
+{text: "Me", reply: "Dei…ku**i payale idhu romba over ah irukku.😏", runaway: true},
+{text: "It just happened", reply: "Maairu la happened😭"}
+]
+},
+{
+question: `${wifeName}, who won't steal the blanket at night?`,
+answers: [
+{text: "You", reply: "Correct Answer !!!"},
+{text: "Me", reply: "Naan blanket edukala… adhu ennoda side ku 'automatic aa vandhuduchu' 🤣", runaway: true},
+{text: "We both", reply: "Nandraga nottungal 😄"}
+]
+},
+{
+question: `${wifeName}, who gets angry first?`,
+answers: [
+{text: "You", reply: "Hey you over eh kusu vidadha 😂", runaway: true},
+{text: "Me", reply: "Thanks for being honest atlast 😌"},
+{text: "Depends", reply: "Eathi vida pa ayappa 😏"}
+]
+},
+{
+question: `${wifeName}, who is dramatic?`,
+answers: [
+{text: "You", reply: "Kundiyala aadi vangiduva 🎭", runaway: true},
+{text: "Me", reply: "Enaku Drama panna teriyadhu, apdi enna valakala nu kusu viduva"},
+{text: "Both", reply: "Nadikadha di chi, nee yaaru nu enaku teriyum"}
+]
+},
+{
+question: `${wifeName}, who apologizes first after a fight?`,
+answers: [
+{text: "You", reply: "Yes… because I need a sleep at night 💀"},
+{text: "Me", reply: "Vaaipu illa raja 😳"},
+{text: "No one", reply: "Aadra aadra nakka mukka... 🤣"}
+]
+},
+{
+question: `${wifeName}, who talks whole level shit during arguments?`,
+answers: [
+{text: "You", reply: "Yes, Irukara idadam teriyama irundhutu poidanum 😂", runaway: true},
+{text: "Me", reply: "Yes, Pecha ore veechu tha 😌"},
+{text: "Both", reply: "Vanga Kun**gale, enga indha pakkam😆"}
+]
+},
+{
+question: `${wifeName}, who is luckier in marriage?`,
+answers: [
+{text: "You", reply: "Wowvvvv (Dev solra maari) 😉", runaway: true},
+{text: "Me", reply: "Love you ❤️"},
+{text: "Both", reply: "Correct answer enna na its your mom 😜"}
+]
+}
+];
+
+let current = 0;
+let runawayAttempts = 0;
+
+/* Floating Hearts */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.innerHTML = "❤️";
+    heart.style.fontSize = (15 + Math.random() * 20) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 8000);
+}, 600);
+
+/* Game Start */
+function startGame() {
+    document.getElementById("landing").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    showQuestion();
+}
+
+//* Show Question */
+function showQuestion() {
+    const q = questions[current];
+    document.getElementById("question").innerText = q.question;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.answers.forEach(a => {
+        const btn = document.createElement("button");
+        btn.innerText = a.text;
+        
+        // Add runaway animation if it's the "Me" button
+        if (a.runaway) {
+            btn.classList.add("runaway-btn");
+            let attempts = 0;
+            
+            btn.addEventListener("mouseenter", function(e) {
+                if (attempts < 4) {
+                    const randomX = (Math.random() * 600 - 300) + 'px';
+                    const randomY = (Math.random() * 600 - 300) + 'px';
+                    this.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                    this.style.transform = `translate(${randomX}, ${randomY}) scale(1.1) rotate(${Math.random() * 10 - 5}deg)`;
+                    attempts++;
+                    
+                    // Update tagline based on attempts
+                    const tagline = this.parentNode.querySelector('.teasing-tagline');
+                    if (tagline && attempts < 4) {
+                        tagline.innerText = `🏃‍♂️ ${4-attempts} attempts remaining! Mudinja nottu (click) me 😜`;
+                        tagline.style.animation = "shake 0.9s ease";
+                        setTimeout(() => tagline.style.animation = "", 900);
+                    }
+                }
+            });
+            
+            btn.addEventListener("mouseleave", function(e) {
+                this.style.transition = "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                this.style.transform = "translate(0, 0) scale(1) rotate(0deg)";
+            });
+            
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const tagline = btn.parentNode.querySelector('.teasing-tagline');
+                
+                if (attempts >= 4) {
+                    btn.style.transition = "transform 0.2s ease";
+                    btn.style.transform = "scale(0.95)";
+                    setTimeout(() => {
+                        btn.style.transform = "scale(1)";
+                    }, 200);
+                    if (tagline) {
+                        tagline.innerText = "🎉 Finally! You caught me! ❤️";
+                        tagline.style.color = "#ff4e78";
+                    }
+                    showPopup(a.reply);
+                } else {
+                    btn.style.transition = "transform 0.15s ease";
+                    btn.style.transform = "scale(0.9) rotate(-5deg)";
+                    setTimeout(() => {
+                        btn.style.transform = "scale(1) rotate(0deg)";
+                    }, 150);
+                    
+                    const teasingMessages = [
+                        "Mudinja click pannu di 😏",
+                        "Too slow! 🏃‍♂️",
+                        "Catch me if you can! 🤪",
+                        "Last attempt! 🎯"
+                    ];
+                    showPopup(teasingMessages[attempts] || "One more try! 😄");
+                }
+            };
+        } else {
+            btn.onclick = () => showPopup(a.reply);
+        }
+        
+        answersDiv.appendChild(btn);
+    });
+    
+    // Create tagline after buttons are added to DOM
+    const meButton = answersDiv.querySelector('.runaway-btn');
+    if (meButton) {
+        const tagline = document.createElement("div");
+        tagline.className = "teasing-tagline";
+        tagline.innerText = "🏃‍♂️ Try catching me! (4 attempts)";
+        answersDiv.appendChild(tagline);
+    }
+}
+
+/* Popup */
+function showPopup(text) {
+    document.getElementById("popupText").innerText = text;
+    document.getElementById("popup").classList.remove("hidden");
+}
+
+function closePopup() {
+    document.getElementById("popup").classList.add("hidden");
+    current++;
+    runawayAttempts = 0; // Reset runaway attempts for next question
+
+    if (current < questions.length) {
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
+
+/* Result */
+function showResult() {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("result").classList.remove("hidden");
+
+    setTimeout(() => {
+        document.getElementById("meterFill").style.width = "100%";
+        document.getElementById("scoreText").innerText =
+        "Avalo tha mudinchu.... Romba sirichite irukadha poi velaiya paaru 😄";
+        launchConfetti();
+    }, 300);
+}
+
+/* Final Message */
+function showFinal() {
+    document.getElementById("result").classList.add("hidden");
+    document.getElementById("final").classList.remove("hidden");
+}
+
+/* Confetti */
+function launchConfetti() {
+    for (let i = 0; i < 40; i++) {
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.animationDelay = Math.random() * 2 + "s";
+        conf.innerText = ["❤️","💖","💘","💕"][Math.floor(Math.random()*4)];
+        document.body.appendChild(conf);
+
+        setTimeout(() => conf.remove(), 3000);
+    }
+}
+</script>
+
+</body>
+</html>
